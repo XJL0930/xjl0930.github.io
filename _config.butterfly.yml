@@ -164,7 +164,7 @@ subtitle:
   source: false
   # 如果关闭打字效果，subtitle 只会显示 sub 的第一行文字
   sub:
-    - 爱的反义词不是恨，而是无视
+    - 祝你早安，午安，晚安
 
 # Article layout on the homepage
 # 1: Cover on the left, info on the right
