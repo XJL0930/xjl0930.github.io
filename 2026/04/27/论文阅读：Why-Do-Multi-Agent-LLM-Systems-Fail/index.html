@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="cn" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>论文阅读：Why Do Multi-Agent LLM Systems Fail? | XJL_VEL的博客</title><meta name="author" content="小俊驴 / XJL_VEL"><meta name="copyright" content="小俊驴 / XJL_VEL"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2503.13657 引言问题定义多智能体系统（MAS）通过结构化协调实现任务分解、性能并行化、上下文隔离、专业化模型集成等功能。MAS 与单智能体框架和 baseline 相比，性能提升不高，且如何构建稳健可靠的 MAS 没有定论，引出研究问题：MAS 为何会失效？ 核心贡献 数据集：MAST-Data 和 MAST-Data-human，前">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读：Why Do Multi-Agent LLM Systems Fail?">
+<meta property="og:url" content="http://xjl0930.github.io/2026/04/27/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AWhy-Do-Multi-Agent-LLM-Systems-Fail/index.html">
+<meta property="og:site_name" content="XJL_VEL的博客">
+<meta property="og:description" content="论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2503.13657 引言问题定义多智能体系统（MAS）通过结构化协调实现任务分解、性能并行化、上下文隔离、专业化模型集成等功能。MAS 与单智能体框架和 baseline 相比，性能提升不高，且如何构建稳健可靠的 MAS 没有定论，引出研究问题：MAS 为何会失效？ 核心贡献 数据集：MAST-Data 和 MAST-Data-human，前">
+<meta property="og:locale">
+<meta property="og:image" content="http://xjl0930.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-04-27T02:01:40.000Z">
+<meta property="article:modified_time" content="2026-04-27T11:37:14.257Z">
+<meta property="article:author" content="小俊驴 &#x2F; XJL_VEL">
+<meta property="article:tag" content="Agents">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xjl0930.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "论文阅读：Why Do Multi-Agent LLM Systems Fail?",
+  "url": "http://xjl0930.github.io/2026/04/27/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AWhy-Do-Multi-Agent-LLM-Systems-Fail/",
+  "image": "http://xjl0930.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-04-27T02:01:40.000Z",
+  "dateModified": "2026-04-27T11:37:14.257Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小俊驴 / XJL_VEL",
+      "url": "http://xjl0930.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://xjl0930.github.io/2026/04/27/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AWhy-Do-Multi-Agent-LLM-Systems-Fail/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '论文阅读：Why Do Multi-Agent LLM Systems Fail?',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/yang.jpg" alt="Logo"><span class="site-name">XJL_VEL的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">论文阅读：Why Do Multi-Agent LLM Systems Fail?</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">论文阅读：Why Do Multi-Agent LLM Systems Fail?</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-04-27T02:01:40.000Z" title="Created 2026-04-27 10:01:40">2026-04-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-27T11:37:14.257Z" title="Updated 2026-04-27 19:37:14">2026-04-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2503.13657">https://arxiv.org/abs/2503.13657</a></p>
+<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><h2 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h2><p>多智能体系统（MAS）通过结构化协调实现任务分解、性能并行化、上下文隔离、专业化模型集成等功能。<br>MAS 与单智能体框架和 baseline 相比，性能提升不高，且如何构建稳健可靠的 MAS 没有定论，引出研究问题：MAS 为何会失效？</p>
+<h2 id="核心贡献"><a href="#核心贡献" class="headerlink" title="核心贡献"></a>核心贡献</h2><ul>
+<li>数据集：MAST-Data 和 MAST-Data-human，前者是一个执行轨迹的集合，后者是人工标注的小规模轨迹数据集。</li>
+<li>多智能体系统分类法（MAST），包括14种失效模式和三种类别：系统设计问题、智能体间错位、任务验证。</li>
+<li>LLM-as-a-judge 管道，用于高效标注数据集。</li>
+</ul>
+<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><h2 id="智能体系统中的挑战"><a href="#智能体系统中的挑战" class="headerlink" title="智能体系统中的挑战"></a>智能体系统中的挑战</h2><ul>
+<li>记忆问题</li>
+<li>工作流程问题</li>
+<li>状态管理问题<br>未提供精准的分类，而且视角聚焦于总体效果等高层目标。</li>
+</ul>
+<h2 id="智能体设计原则"><a href="#智能体设计原则" class="headerlink" title="智能体设计原则"></a>智能体设计原则</h2><p>设计原则多集中于单智能体场景。</p>
+<h2 id="相关数据集与分类法"><a href="#相关数据集与分类法" class="headerlink" title="相关数据集与分类法"></a>相关数据集与分类法</h2><p>大部分工具聚焦于智能体系统的效用和调试，或对话、代码能力等特定维度的评估方法。</p>
+<h1 id="MAST-Data-数据集"><a href="#MAST-Data-数据集" class="headerlink" title="MAST-Data 数据集"></a>MAST-Data 数据集</h1><h2 id="数据收集"><a href="#数据收集" class="headerlink" title="数据收集"></a>数据收集</h2><p>首先使用理论抽样选择五个 MAS 和两种任务目标；然后基于扎根理论（GT），迭代对轨迹进行分析。<br><em>扎根理论</em>是一种定性研究方法，其核心特点是不预设假设，通过持续的观察、总结、迭代来从数据中得出理论，其主要包含以下步骤：</p>
+<ul>
+<li>开放式编码（Open coding）：用观察到的失效行为标记轨迹数据</li>
+<li>持续比较分析（Constant comparative analysis）：不断完善对失效行为的理解及其跨系统的重现规律</li>
+<li>备忘录撰写（Memoing）：记录研究过程中的洞见</li>
+<li>理论构建（Theorizing）：将研究发现结构化为初始的失效模式集及其定义</li>
+</ul>
+<h2 id="通过标注者一致性进行标准化"><a href="#通过标注者一致性进行标准化" class="headerlink" title="通过标注者一致性进行标准化"></a>通过标注者一致性进行标准化</h2><p>通过标注者一致性（IAA）研究精炼MAST定义。从上一步得到的初始化 MAST 方法开始，每一轮 IAA 都有三个标注者从数据集中选5条进行标注，通过讨论来精炼 MAST。经过三次迭代，标注者一致性达到0.88（Cohen’s Kappa）。</p>
+<h2 id="实现可扩展性标注"><a href="#实现可扩展性标注" class="headerlink" title="实现可扩展性标注"></a>实现可扩展性标注</h2><p>为实现大规模高效标注，开发了一个 LLM-as-a-Judge 方案，训练了一个  OpenAI 的 o1 模型根据 MAST 标准生成机器可读的标签。</p>
+<h2 id="构建多智能体数据集"><a href="#构建多智能体数据集" class="headerlink" title="构建多智能体数据集"></a>构建多智能体数据集</h2><p>用三种方法对大规模轨迹数据进行标注：1）人工评估（HE）：人类专家验证任务完成状态；2）人工标注（HA）：三位专家独立标注失效模式以确保一致性；3）LLM标注（LA）：我们的LLM-as-a-Judge为大规模标注提供支持。</p>
+<h1 id="多智能体失效分类法-MAST"><a href="#多智能体失效分类法-MAST" class="headerlink" title="多智能体失效分类法 MAST"></a>多智能体失效分类法 MAST</h1><p>专注于那些通过系统设计、智能体协调和验证的改进可以提升 MAS 可靠性的失效。</p>
+<h2 id="系统设计问题"><a href="#系统设计问题" class="headerlink" title="系统设计问题"></a>系统设计问题</h2><p>MAS失效不仅仅是底层模型挑战的反映；即使使用相同的底层模型，设计良好的MAS也能带来性能提升。<br>该失效常发生于执行阶段，通常反映了系统架构、状态管理的执行前设计选择上的缺陷。<br>包括以下失效模式：</p>
+<ul>
+<li>未能遵循任务需求（FM-1.1，11.8%）</li>
+<li>未能遵守智能体角色（FM-1.2，1.5%）</li>
+<li>步骤重复（FM-1.3，15.7%）</li>
+<li>上下文丢失（FM-1.4，2.80%）</li>
+<li>未能识别任务完成（FM-1.5，12.4%）<br>设计良好的MAS应该能用最小但清晰的用户输入来解释高层次目标。</li>
+</ul>
+<h2 id="智能体间错位"><a href="#智能体间错位" class="headerlink" title="智能体间错位"></a>智能体间错位</h2><p>专注于上下文或通信协议的解决方案对于FC2的失效往往是不充分的，这类失效需要智能体具备更深层的”社会推理”能力。<br>包括以下失效模式：</p>
+<ul>
+<li>意外的对话重置（FM-2.1，2.20%）</li>
+<li>带着错误假设继续前进而非寻求澄清（FM-2.2，6.80%）</li>
+<li>任务偏离（FM-2.3，7.40%）</li>
+<li>隐瞒关键信息（FM-2.4，0.85%）</li>
+<li>忽视其他智能体的输入（FM-2.5，1.90%）</li>
+<li>推理与行动不匹配（FM-2.6，13.2%）<br>可能标志着“心智理论”的崩溃，即智能体无法准确建模其他智能体的信息需求。<br>解决方案很可能涉及改进 MAS 框架与模型层面的通信智能。</li>
+</ul>
+<h2 id="任务验证"><a href="#任务验证" class="headerlink" title="任务验证"></a>任务验证</h2><p>需要多次验证，当前的验证器实现往往不足，不能仅依赖最终阶段的检查。<br>包括以下失效模式：</p>
+<ul>
+<li>过早终止（FM-3.1，6.20%）</li>
+<li>无验证或验证不完整（FM-3.2，8.20%）</li>
+<li>验证不正确（FM-3.3，9.10%）<br>明确检查确实有所帮助，但很多验证器仅进行表面检查。<br>需要借助外部知识和中间过程的更严格的检查，以及针对正确性和高层次目标的多层次检查。</li>
+</ul>
+<h1 id="实验结论"><a href="#实验结论" class="headerlink" title="实验结论"></a>实验结论</h1><h2 id="失效分解"><a href="#失效分解" class="headerlink" title="失效分解"></a>失效分解</h2><p>MAS、模型、任务类型都会影响失效的概率和类型分布，MAS 失效不存在一劳永逸的解决方案。</p>
+<h2 id="系统设计的重要性"><a href="#系统设计的重要性" class="headerlink" title="系统设计的重要性"></a>系统设计的重要性</h2><p>良好的 MAS 设计需要组织性理解，许多 MAS 失效来自于组织设计和智能体协调挑战，而非单个智能体的局限。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://xjl0930.github.io">小俊驴 / XJL_VEL</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://xjl0930.github.io/2026/04/27/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AWhy-Do-Multi-Agent-LLM-Systems-Fail/">http://xjl0930.github.io/2026/04/27/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AWhy-Do-Multi-Agent-LLM-Systems-Fail/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Agents/">Agents</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AMETAGPT-META-PROGRAMMING-FOR-A-MULTI-AGENT-COLLABORATIVE-FRAMEWORK/" title="论文阅读：METAGPT: META PROGRAMMING FOR A MULTI-AGENT COLLABORATIVE FRAMEWORK"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">论文阅读：METAGPT: META PROGRAMMING FOR A MULTI-AGENT COLLABORATIVE FRAMEWORK</div></div><div class="info-2"><div class="info-item-1">链接：https://arxiv.org/abs/2308.00352 引言简单串联LLM会导致级连幻觉，复杂任务的解决方案往往会出现逻辑不一致问题。 标准操作程序（SOP）：支持任务分解，有效协调，明确成员职责，指定中间输出。 受此启发，MetaGPT要求智能体生成结构化输出，如需求文档、设计制品、流程图和接口规范，同时交接需要符合标准。作用是保持沟通的一致性，减少协作中的歧义和错误。 元编程：“以编程的方式编程（programming to program）” 相关工作已有的基于 LLM 的智能体自动编程框架没有格式化输出模式的有效工作流程。 现有的多智能体框架聚焦于模仿人类行为，同时面临着协作的挑战。 所以论文使用 SOP 这一模仿人类行为的能格式化输出模式的工作流，解决多智能体编程协作的问题。 MetaGPT框架架构基础角色特化：产品经理、架构师、项目经理、工程师和 QA 工程师。为每个智能体指定名称、简介、目标、约束条件，同时为每个角色初始化上下文和特定的工具。每个智能体遵循 React 风格。 工作流：  产品经理制订产品需求文档（PRD），包括用户故事和需求池 结构...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/04/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AMETAGPT-META-PROGRAMMING-FOR-A-MULTI-AGENT-COLLABORATIVE-FRAMEWORK/" title="论文阅读：METAGPT: META PROGRAMMING FOR A MULTI-AGENT COLLABORATIVE FRAMEWORK"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-25</div><div class="info-item-2">论文阅读：METAGPT: META PROGRAMMING FOR A MULTI-AGENT COLLABORATIVE FRAMEWORK</div></div><div class="info-2"><div class="info-item-1">链接：https://arxiv.org/abs/2308.00352 引言简单串联LLM会导致级连幻觉，复杂任务的解决方案往往会出现逻辑不一致问题。 标准操作程序（SOP）：支持任务分解，有效协调，明确成员职责，指定中间输出。 受此启发，MetaGPT要求智能体生成结构化输出，如需求文档、设计制品、流程图和接口规范，同时交接需要符合标准。作用是保持沟通的一致性，减少协作中的歧义和错误。 元编程：“以编程的方式编程（programming to program）” 相关工作已有的基于 LLM 的智能体自动编程框架没有格式化输出模式的有效工作流程。 现有的多智能体框架聚焦于模仿人类行为，同时面临着协作的挑战。 所以论文使用 SOP 这一模仿人类行为的能格式化输出模式的工作流，解决多智能体编程协作的问题。 MetaGPT框架架构基础角色特化：产品经理、架构师、项目经理、工程师和 QA 工程师。为每个智能体指定名称、简介、目标、约束条件，同时为每个角色初始化上下文和特定的工具。每个智能体遵循 React 风格。 工作流：  产品经理制订产品需求文档（PRD），包括用户故事和需求池 结构...</div></div></div></a><a class="pagination-related" href="/2026/04/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9ASHARING-STATE-BETWEEN-PROMPTS-AND-PROGRAMS/" title="论文阅读：SHARING STATE BETWEEN PROMPTS AND PROGRAMS"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-23</div><div class="info-item-2">论文阅读：SHARING STATE BETWEEN PROMPTS AND PROGRAMS</div></div><div class="info-2"><div class="info-item-1">链接：https://arxiv.org/abs/2512.14805 文章提出了共享程序状态（shared program state），提出了一个用于规范自然函数接口，并在NIGHTJAR编程系统中实现了共享程序状态。 引言提示词实现了更高层次的抽象，因其所需实现的细节更少。 提示词与程序的互操作性：提示词与程序能操作共同的数据。 隔离程序状态（Isolated Program State）：程序员手动实现数据及广义上的程序状态在环境边界之间的传递。 共享程序状态：提示词可以直接访问程序状态，如读写程序变量、使用程序对象进行计算、在程序中实现控制流。 自然函数接口（Natural Function Interface）：规定了提示词如何与宿主程序进行交互。 论文框架将共享程序状态指定为一种自然函数接口的实现。 共享程序状态提示词可以读写Python变量、操作对象进行计算并控制周围Python程序的执行流。 共享作用域：模型可以直接在提示词中给变量赋值&lt;:var&gt;。 共享堆：通过引用访问Python堆中的Python对象，如对某一字典变量就地更新。 共享控制状态：如...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小俊驴 / XJL_VEL</div><div class="author-info-description">只是一个博客</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.2.</span> <span class="toc-text">核心贡献</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E4%BD%93%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">2.1.</span> <span class="toc-text">智能体系统中的挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E4%BD%93%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">2.2.</span> <span class="toc-text">智能体设计原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%95%B0%E6%8D%AE%E9%9B%86%E4%B8%8E%E5%88%86%E7%B1%BB%E6%B3%95"><span class="toc-number">2.3.</span> <span class="toc-text">相关数据集与分类法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MAST-Data-%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">MAST-Data 数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%94%B6%E9%9B%86"><span class="toc-number">3.1.</span> <span class="toc-text">数据收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E6%A0%87%E6%B3%A8%E8%80%85%E4%B8%80%E8%87%B4%E6%80%A7%E8%BF%9B%E8%A1%8C%E6%A0%87%E5%87%86%E5%8C%96"><span class="toc-number">3.2.</span> <span class="toc-text">通过标注者一致性进行标准化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%89%A9%E5%B1%95%E6%80%A7%E6%A0%87%E6%B3%A8"><span class="toc-number">3.3.</span> <span class="toc-text">实现可扩展性标注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.4.</span> <span class="toc-text">构建多智能体数据集</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%A4%B1%E6%95%88%E5%88%86%E7%B1%BB%E6%B3%95-MAST"><span class="toc-number">4.</span> <span class="toc-text">多智能体失效分类法 MAST</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E9%97%AE%E9%A2%98"><span class="toc-number">4.1.</span> <span class="toc-text">系统设计问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E4%BD%93%E9%97%B4%E9%94%99%E4%BD%8D"><span class="toc-number">4.2.</span> <span class="toc-text">智能体间错位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E9%AA%8C%E8%AF%81"><span class="toc-number">4.3.</span> <span class="toc-text">任务验证</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E8%AE%BA"><span class="toc-number">5.</span> <span class="toc-text">实验结论</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%B1%E6%95%88%E5%88%86%E8%A7%A3"><span class="toc-number">5.1.</span> <span class="toc-text">失效分解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-number">5.2.</span> <span class="toc-text">系统设计的重要性</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/27/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AWhy-Do-Multi-Agent-LLM-Systems-Fail/" title="论文阅读：Why Do Multi-Agent LLM Systems Fail?">论文阅读：Why Do Multi-Agent LLM Systems Fail?</a><time datetime="2026-04-27T02:01:40.000Z" title="Created 2026-04-27 10:01:40">2026-04-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AMETAGPT-META-PROGRAMMING-FOR-A-MULTI-AGENT-COLLABORATIVE-FRAMEWORK/" title="论文阅读：METAGPT: META PROGRAMMING FOR A MULTI-AGENT COLLABORATIVE FRAMEWORK">论文阅读：METAGPT: META PROGRAMMING FOR A MULTI-AGENT COLLABORATIVE FRAMEWORK</a><time datetime="2026-04-25T01:45:36.000Z" title="Created 2026-04-25 09:45:36">2026-04-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9ASHARING-STATE-BETWEEN-PROMPTS-AND-PROGRAMS/" title="论文阅读：SHARING STATE BETWEEN PROMPTS AND PROGRAMS">论文阅读：SHARING STATE BETWEEN PROMPTS AND PROGRAMS</a><time datetime="2026-04-23T12:15:13.000Z" title="Created 2026-04-23 20:15:13">2026-04-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/28/hello-world/" title="Hello World">Hello World</a><time datetime="2025-11-28T12:53:59.124Z" title="Created 2025-11-28 20:53:59">2025-11-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 小俊驴 / XJL_VEL</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><div class="js-pjax"></div><script async data-pjax src="/"></script></div></body></html>
