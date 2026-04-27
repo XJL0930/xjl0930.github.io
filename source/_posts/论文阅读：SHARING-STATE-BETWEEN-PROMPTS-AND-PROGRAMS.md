@@ -5,8 +5,6 @@ categories: 论文阅读
 tags: Agents
 ---
 
-# SHARING STATE BETWEEN PROMPTS AND PROGRAMS
-
 链接：https://arxiv.org/abs/2512.14805
 
 文章提出了**共享程序状态（shared program state）**，提出了一个用于规范自然函数接口，并在NIGHTJAR编程系统中实现了共享程序状态。
